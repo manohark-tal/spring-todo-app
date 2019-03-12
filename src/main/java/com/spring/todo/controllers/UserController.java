@@ -32,9 +32,7 @@ public class UserController {
 	public UserSummary getCurrentUser() {
 		UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName(),
-				currentUser.getEmail());
-		userSummary.setAuthorities(currentUser.getAuthorities());
+		UserSummary userSummary = new UserSummary(currentUser);
 		return userSummary;
 	}
 
@@ -42,13 +40,8 @@ public class UserController {
 	@ApiOperation(value = "Get All Users Details in Application", response = UserSummary.class, responseContainer = "List")
 	public List<UserSummary> getAllUsers() {
 		List<User> allUsers = userService.getAllUsers();
-		List<UserSummary> userSummaries = allUsers.stream().map((currentUser) -> {
-			UserPrincipal userPrincipal = UserPrincipal.create(currentUser);
-			UserSummary summary = new UserSummary(userPrincipal.getId(), userPrincipal.getUsername(),
-					userPrincipal.getName(), userPrincipal.getEmail());
-			summary.setAuthorities(userPrincipal.getAuthorities());
-			return summary;
-		}).collect(Collectors.toList());
+		List<UserSummary> userSummaries = allUsers.stream()
+				.map((currentUser) -> new UserSummary(UserPrincipal.create(currentUser))).collect(Collectors.toList());
 		return userSummaries;
 	}
 }

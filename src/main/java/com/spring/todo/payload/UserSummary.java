@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.spring.todo.security.UserPrincipal;
+
 public class UserSummary {
 	private Long id;
 	private String username;
@@ -16,6 +18,14 @@ public class UserSummary {
 		this.username = username;
 		this.name = name;
 		this.email = email;
+	}
+
+	public UserSummary(UserPrincipal principal) {
+		this.id = principal.getId();
+		this.username = principal.getUsername();
+		this.name = principal.getName();
+		this.email = principal.getEmail();
+		this.authorities = principal.getAuthorities();
 	}
 
 	public Long getId() {

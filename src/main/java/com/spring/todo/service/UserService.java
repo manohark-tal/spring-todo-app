@@ -48,4 +48,9 @@ public class UserService {
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
 	}
+
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public User findUserById(long userId) {
+		return userRepository.findById(userId).orElseThrow(() -> new AppException("Unable to find User with given Id"));
+	}
 }

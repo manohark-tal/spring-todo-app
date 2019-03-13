@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.todo.models.User;
@@ -33,6 +34,14 @@ public class UserController {
 		UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 		UserSummary userSummary = new UserSummary(currentUser);
+		return userSummary;
+	}
+
+	@GetMapping("/{userId}")
+	@ApiOperation(value = "Get User Details for given userId", response = UserSummary.class)
+	public UserSummary getUserById(@RequestParam Long userId) {
+		User user = userService.findUserById(userId);
+		UserSummary userSummary = new UserSummary(UserPrincipal.create(user));
 		return userSummary;
 	}
 
